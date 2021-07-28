@@ -34,8 +34,6 @@ namespace Main {
         decltype(SharedStates::Sample::time) sampleTime;
         decltype(SharedStates::Sample::pressure) samplePressure;
         decltype(SharedStates::Sample::volume) sampleVolume;
-        decltype(SharedStates::Dry::time) dryTime;
-        decltype(SharedStates::Preserve::time) preserveTime;
     };
 
     class Controller : public StateController, public StateControllerConfig<Config> {
@@ -45,9 +43,7 @@ namespace Main {
         // FLUSH -> SAMPLE -> DRY -> PRESERVE -> STOP -> IDLE
         void setup() override {
             registerState(SharedStates::Flush(), FLUSH, SAMPLE);
-            registerState(SharedStates::Sample(), SAMPLE, DRY);
-            registerState(SharedStates::Dry(), DRY, PRESERVE);
-            registerState(SharedStates::Preserve(), PRESERVE, STOP);
+            registerState(SharedStates::Sample(), SAMPLE, STOP);
             registerState(Stop(), STOP, IDLE);
             registerState(Idle(), IDLE);
         }

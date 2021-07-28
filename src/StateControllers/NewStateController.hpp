@@ -20,8 +20,6 @@ namespace New {
         decltype(SharedStates::Sample::time) sampleTime;
         decltype(SharedStates::Sample::pressure) samplePressure;
         decltype(SharedStates::Sample::volume) sampleVolume;
-        decltype(SharedStates::Dry::time) dryTime;
-        decltype(SharedStates::Preserve::time) preserveTime;
     };
 
     class Controller : public StateController, public StateControllerConfig<Config> {
@@ -41,11 +39,6 @@ namespace New {
             sample.pressure       = config.samplePressure;
             sample.volume         = config.sampleVolume;
 
-            decltype(auto) dry = getState<SharedStates::Dry>(DRY);
-            dry.time           = config.dryTime;
-
-            decltype(auto) preserve = getState<SharedStates::Preserve>(PRESERVE);
-            preserve.time           = config.preserveTime;
         }
 
         void begin() override {

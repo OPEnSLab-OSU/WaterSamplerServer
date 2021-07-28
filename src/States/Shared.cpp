@@ -84,17 +84,6 @@ namespace SharedStates {
         setCondition(condition, [&]() { sm.next(); });
     }
 
-    void Dry::enter(KPStateMachine & sm) {
-        auto & app = *static_cast<App *>(sm.controller);
-        app.shift.setAllRegistersLow();
-        app.intake.off();
-        app.shift.setPin(TPICDevices::AIR_VALVE, HIGH);
-        app.shift.setPin(app.currentValveIdToPin(), HIGH);
-        app.shift.write();
-        app.pump.on();
-
-        setTimeCondition(time, [&]() { sm.next(); });
-    }
 
     void OffshootClean::enter(KPStateMachine & sm) {
         auto & app = *static_cast<App *>(sm.controller);
@@ -151,15 +140,4 @@ namespace SharedStates {
         });
     };
 
-    void Preserve::enter(KPStateMachine & sm) {
-        auto & app = *static_cast<App *>(sm.controller);
-        app.shift.writeAllRegistersLow();
-        app.intake.off();
-        app.shift.setPin(TPICDevices::ALCHOHOL_VALVE, HIGH);
-        app.shift.setPin(app.currentValveIdToPin(), HIGH);
-        app.shift.write();
-        app.pump.on();
-
-        setTimeCondition(time, [&]() { sm.next(); });
-    }
 }  // namespace SharedStates

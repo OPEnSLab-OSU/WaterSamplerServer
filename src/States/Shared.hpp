@@ -68,15 +68,7 @@ namespace SharedStates {
         void enter(KPStateMachine & sm) override;
     };
 
-    /** ────────────────────────────────────────────────────────────────────────────
-     *
-     *
-     *  ──────────────────────────────────────────────────────────────────────────── */
-    class Dry : public KPState {
-    public:
-        unsigned long time = 10;
-        void enter(KPStateMachine & sm) override;
-    };
+
 
     /** ────────────────────────────────────────────────────────────────────────────
      *
@@ -99,13 +91,4 @@ namespace SharedStates {
         void enter(KPStateMachine & sm) override;
     };
 
-    /** ────────────────────────────────────────────────────────────────────────────
-     *
-     *
-     *  ──────────────────────────────────────────────────────────────────────────── */
-    class Preserve : public KPState {
-    public:
-        unsigned long time = 0;
-        void enter(KPStateMachine & sm) override;
-    };
 }  // namespace SharedStates

@@ -33,8 +33,6 @@ public:
     int sampleTime     = 0;
     float sampleVolume = 0;
     int samplePressure = 0;
-    int dryTime        = 0;
-    int preserveTime   = 0;
 
     bool deleteOnCompletion = false;
 
@@ -110,8 +108,6 @@ public:
         sampleTime     = source[SAMPLE_TIME];
         samplePressure = source[SAMPLE_PRESSURE];
         sampleVolume   = source[SAMPLE_VOLUME];
-        dryTime        = source[DRY_TIME];
-        preserveTime   = source[PRESERVE_TIME];
         timeBetween    = source[TIME_BETWEEN];
     }
 #pragma endregion
@@ -139,8 +135,6 @@ public:
 			&& dst[SAMPLE_TIME].set(sampleTime)
 			&& dst[SAMPLE_PRESSURE].set(samplePressure) 
 			&& dst[SAMPLE_VOLUME].set(sampleVolume)
-			&& dst[DRY_TIME].set(dryTime) 
-			&& dst[PRESERVE_TIME].set(preserveTime)
 			&& dst[TIME_BETWEEN].set(timeBetween) 
 			&& dst[VALVES_OFFSET].set(getValveOffsetStart())
 			&& dst[DELETE].set(deleteOnCompletion)
@@ -160,7 +154,5 @@ public:
         config.sampleTime     = sampleTime;
         config.samplePressure = samplePressure;
         config.sampleVolume   = sampleVolume;
-        config.dryTime        = dryTime;
-        config.preserveTime   = preserveTime;
     }
 };
