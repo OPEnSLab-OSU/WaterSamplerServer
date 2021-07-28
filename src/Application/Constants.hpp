@@ -26,7 +26,7 @@ namespace TPICDevices {
 namespace HardwarePins {
     __k_auto POWER_MODULE = A0;
 #ifdef LIVE
-    // A1 is eDNA, 12 for HYPNOS
+    // A1 is Water, 12 for HYPNOS
     __k_auto RTC_INTERRUPT = A1;
 #else
     __k_auto RTC_INTERRUPT = 12;  // Change this to A1 to force using A1 for RTC

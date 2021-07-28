@@ -16,7 +16,7 @@ git checkout --recurse-submodule <submodule>
 
 ### Setup
 
-First navigate to develop branch in eDNA-Server local repo
+First navigate to develop branch in water-sampler-server local repo
 
 ```shell
 git config push.recurseSubmodules check
