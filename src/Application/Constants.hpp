@@ -17,7 +17,6 @@ namespace TPICDevices {
     __k_auto INTAKE_POS     = 0;
     __k_auto INTAKE_NEG     = 1;
     __k_auto AIR_VALVE      = 2;
-    __k_auto ALCHOHOL_VALVE = 3;
     __k_auto FLUSH_VALVE    = 4;
 };  // namespace TPICDevices
 
@@ -95,8 +94,6 @@ namespace TaskKeys {
     __k_auto SAMPLE_TIME     = "sampleTime";
     __k_auto SAMPLE_PRESSURE = "samplePressure";
     __k_auto SAMPLE_VOLUME   = "sampleVolume";
-    __k_auto DRY_TIME        = "dryTime";
-    __k_auto PRESERVE_TIME   = "preserveTime";
 }  // namespace TaskKeys
 
 namespace ValveKeys {
