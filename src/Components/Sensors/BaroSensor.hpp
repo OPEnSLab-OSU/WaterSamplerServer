@@ -12,8 +12,10 @@ private:
     }
 
 public:
+    float temperature = 0;
     BaroSensor(byte address) : sensor(address, 512) {}
     SensorData read() override {
+        temperature = sensor.temperature();
         return {sensor.pressure(), sensor.temperature()};
     }
 };
