@@ -385,7 +385,7 @@ public:
             }
 
             if (time_now >= task.schedule - 10) {
-                if(sensors.baro1.temperature <= 0){
+                if(sensors.baro1.temperature < 0){
                     println(RED("Too cold"));
                     invalidateTaskAndFreeUpValves(task);
                     logInterruptedSample();
