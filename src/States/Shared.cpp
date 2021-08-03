@@ -78,10 +78,6 @@ namespace SharedStates {
                 this->condition = "time";
             }
 
-            if(app.sensors.baro1.temperature < 0){
-                this->condition = "temperature";
-            }
-
             return this->condition != nullptr;
         };
 

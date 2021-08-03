@@ -290,6 +290,43 @@ public:
         log.close();
     }
 
+    void logInterruptedSample() {
+        SD.begin(HardwarePins::SD_CARD);
+        File log    = SD.open(config.logFile, FILE_WRITE);
+
+        char formattedTime[64];
+        auto utc = now();
+        sprintf(
+            formattedTime, "%u/%u/%u %02u:%02u:%02u GMT+0", year(utc), month(utc), day(utc),
+            hour(utc), minute(utc), second(utc));
+
+                KPStringBuilder<512> data{
+            utc,
+            ",",
+            formattedTime,
+            ",",
+            "SAMPLE INTERRUPTED",
+            ",",
+            "Temperature < 0C",
+            ",",
+            "NULL",
+            ",",
+            "0",
+            ",",
+            "0",
+            ",",
+            "0",
+            ",",
+            status.temperature,
+            ",",
+            "0",
+            ",",
+            "0"};
+        log.println(data);
+        log.flush();
+        log.close();
+    }
+
     template <typename T, typename... Args>
     auto dispatchAPI(Args &&... args) {
         return T{}(*this, std::forward<Args>(args)...);
@@ -348,6 +385,12 @@ public:
             }
 
             if (time_now >= task.schedule - 10) {
+                if(sensors.baro1.temperature <= 0){
+                    println(RED("Too cold"));
+                    invalidateTaskAndFreeUpValves(task);
+                    logInterruptedSample();
+                    return ScheduleReturnCode::interrupted;
+                }
                 // Wake up between 10 secs of the actual schedule time
                 // Prepare an action to execute at exact time
                 const auto timeUntil = task.schedule - time_now;

@@ -2,7 +2,7 @@
 
 class ScheduleReturnCode {
 public:
-    enum Code { unavailable, operating, scheduled } _code;
+    enum Code { unavailable, operating, scheduled, interrupted } _code;
 
 public:
     ScheduleReturnCode(Code code) : _code(code) {}
@@ -19,6 +19,8 @@ public:
             return "Task is being executed";
         case scheduled:
             return "Task scheduled for execution";
+        case interrupted:
+            return "Task was interrupted due to temperature";
         default:
             halt(TRACE, "Unknown case");
         }
@@ -32,6 +34,8 @@ public:
             return "operating";
         case scheduled:
             return "scheduled";
+        case interrupted:
+            return "interrupted";
         default:
             halt(TRACE, "Unknown case");
         }
