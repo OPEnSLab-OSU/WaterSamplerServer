@@ -10,8 +10,6 @@ namespace New {
     STATE(FLUSH_2);
     STATE(SAMPLE);
     STATE(OFFSHOOT_CLEAN_2);
-    STATE(DRY);
-    STATE(PRESERVE);
     STATE(AIR_FLUSH);
     STATE(STOP);
 
