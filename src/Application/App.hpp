@@ -19,6 +19,7 @@
 
 #include <StateControllers/NewStateController.hpp>
 #include <StateControllers/HyperFlushStateController.hpp>
+#include <StateControllers/PreFillStateController.hpp>
 
 #include <Valve/Valve.hpp>
 #include <Valve/ValveManager.hpp>
@@ -66,6 +67,7 @@ public:
     // MainStateController sm;
     NewStateController newStateController;
     HyperFlushStateController hyperFlushStateController;
+    PreFillStateController preFillStateController;
 
     ValveManager vm;
     TaskManager tm;
@@ -161,6 +163,17 @@ public:
 
         addComponent(hyperFlushStateController);
         hyperFlushStateController.idle();  // Wait in IDLE
+
+        //
+        //  ─── PRE FILL CONTROLLER ────────────────────────────────────────
+        //
+
+        preFillStateController.configure([](PreFill::Config & config){
+            config.preloadTime = 5;
+        });
+
+        addComponent(preFillStateController);
+        preFillStateController.idle();
 
         //
         // ─── NEW STATE CONTROLLER ────────────────────────────────────────
@@ -339,6 +352,10 @@ public:
 public:
     void beginHyperFlush() {
         hyperFlushStateController.begin();
+    }
+
+    void beingPreFill(){
+        preFillStateController.begin();
     }
 
     ValveBlock currentValveNumberToBlock() {

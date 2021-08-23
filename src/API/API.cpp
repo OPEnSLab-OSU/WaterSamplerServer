@@ -15,6 +15,20 @@ namespace API {
         return response;
     }
 
+    auto PreFillBags::operator()(App & app) -> R {
+        decltype(auto) preFillName = app.preFillStateController.getCurrentState()->getName();
+
+        R response;
+        if (strcmp(PreFill::IDLE, preFillName) == 0) {
+            app.beingPreFill();
+            response["success"] = "Begin preloading water";
+        } else {
+            response["error"] = "Preloading argon is already in operation";
+        }
+
+        return response;
+    }
+
     auto StatusGet::operator()(App & app) -> R {
         R response;
         encodeJSON(app.status, response.to<JsonObject>());
