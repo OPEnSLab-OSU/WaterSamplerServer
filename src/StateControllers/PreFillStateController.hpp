@@ -5,29 +5,29 @@
 namespace PreFill {
     STATE(IDLE);
     STATE(STOP);
-    STATE(OFFSHOOT_PRELOAD);
+    STATE(PREFILL);
 
     struct Config {
-        decltype(SharedStates::OffshootPreload::preloadTime) preloadTime;
+        decltype(SharedStates::BagPrefill::prefillTime) prefillTime;
     };
 
     class Controller : public StateControllerWithConfig<Config> {
     public:
         Controller() : StateControllerWithConfig("prefill-state-machine") {}
 
-        // FLUSH -> OFFSHOOT_PRELOAD -> STOP -> IDLE
+        // FLUSH -> PREFILL -> STOP -> IDLE
         void setup() override {
-            registerState(SharedStates::OffshootPreload(), OFFSHOOT_PRELOAD, STOP);
+            registerState(SharedStates::BagPrefill(), PREFILL, STOP);
             registerState(SharedStates::Stop(), STOP, IDLE);
             registerState(SharedStates::Idle(), IDLE);
         }
 
         void begin() override {
 
-            decltype(auto) preload = getState<SharedStates::OffshootPreload>(OFFSHOOT_PRELOAD);
-            preload.preloadTime    = config.preloadTime;
+            decltype(auto) preload = getState<SharedStates::BagPrefill>(PREFILL);
+            preload.prefillTime    = config.prefillTime;
 
-            transitionTo(OFFSHOOT_PRELOAD);
+            transitionTo(PREFILL);
         }
 
         void stop() override {

@@ -15,7 +15,7 @@ namespace API {
         return response;
     }
 
-    auto PreFillBags::operator()(App & app) -> R {
+    auto StartPreFill::operator()(App & app) -> R {
         decltype(auto) preFillName = app.preFillStateController.getCurrentState()->getName();
 
         R response;

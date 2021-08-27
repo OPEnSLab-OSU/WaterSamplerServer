@@ -169,7 +169,7 @@ public:
         //
 
         preFillStateController.configure([](PreFill::Config & config){
-            config.preloadTime = 5;
+            config.prefillTime = 5;
         });
 
         addComponent(preFillStateController);

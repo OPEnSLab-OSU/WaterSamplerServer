@@ -20,6 +20,12 @@ void App::setupServerRouting() {
         res.end();
     });
 
+    server.get("/api/prefill", [this](Request &, Response & res) {
+        const auto & response = dispatchAPI<API::StartPreFill>();
+        res.json(response);
+        res.end();
+    });
+
     // ────────────────────────────────────────────────────────────────────────────────
     // Get the current status
     // ────────────────────────────────────────────────────────────────────────────────

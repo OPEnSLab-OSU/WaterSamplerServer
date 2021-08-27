@@ -91,4 +91,15 @@ namespace SharedStates {
         void enter(KPStateMachine & sm) override;
     };
 
+
+    /** ────────────────────────────────────────────────────────────────────────────
+     *
+     *
+     *  ──────────────────────────────────────────────────────────────────────────── */
+    class BagPrefill : public KPState {
+    public:
+        int prefillTime = 5;
+        void enter(KPStateMachine & sm) override;
+    };
+
 }  // namespace SharedStates
