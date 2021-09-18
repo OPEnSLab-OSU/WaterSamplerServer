@@ -5,11 +5,9 @@
 
 namespace New {
     STATE(IDLE);
-    STATE(FLUSH_1);
-    STATE(OFFSHOOT_CLEAN_1);
-    STATE(FLUSH_2);
+    STATE(ARGON_FLUSH);
+    STATE(FLUSH);
     STATE(SAMPLE);
-    STATE(OFFSHOOT_CLEAN_2);
     STATE(AIR_FLUSH);
     STATE(STOP);
 
@@ -26,11 +24,8 @@ namespace New {
 
         void setup();
         void configureStates() {
-            decltype(auto) flush1 = getState<SharedStates::Flush>(FLUSH_1);
+            decltype(auto) flush1 = getState<SharedStates::Flush>(FLUSH);
             flush1.time           = config.flushTime;
-
-            decltype(auto) flush2 = getState<SharedStates::Flush>(FLUSH_2);
-            flush2.time           = config.flushTime;
 
             decltype(auto) sample = getState<SharedStates::Sample>(SAMPLE);
             sample.time           = config.sampleTime;
@@ -41,7 +36,7 @@ namespace New {
 
         void begin() override {
             configureStates();
-            transitionTo(FLUSH_1);
+            transitionTo(ARGON_FLUSH);
         }
 
         void stop() override {

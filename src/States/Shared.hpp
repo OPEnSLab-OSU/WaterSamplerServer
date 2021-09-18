@@ -30,6 +30,7 @@ namespace SharedStates {
     public:
         unsigned long time = 10;
         void enter(KPStateMachine & sm) override;
+        const char * condition;
     };
 
     /** ────────────────────────────────────────────────────────────────────────────
@@ -41,6 +42,7 @@ namespace SharedStates {
         unsigned long time   = 10;
         unsigned long volume = 1000;
         void enter(KPStateMachine & sm) override;
+        const char * condition;
     };
 
     /** ────────────────────────────────────────────────────────────────────────────
@@ -51,6 +53,18 @@ namespace SharedStates {
     public:
         unsigned long time = 15;
         void enter(KPStateMachine & sm) override;
+        const char * condition;
+    };
+
+    /** ────────────────────────────────────────────────────────────────────────────
+     *
+     *
+     *  ──────────────────────────────────────────────────────────────────────────── */
+    class ArgonFlush : public KPState {
+    public:
+        unsigned long time = 15;
+        void enter(KPStateMachine & sm) override;
+        const char * condition;
     };
 
     /** ────────────────────────────────────────────────────────────────────────────
@@ -79,6 +93,7 @@ namespace SharedStates {
         unsigned long time = 5;
         OffshootClean(unsigned long time) : time(time) {}
         void enter(KPStateMachine & sm) override;
+        const char * condition;
     };
 
     /** ────────────────────────────────────────────────────────────────────────────
@@ -89,6 +104,7 @@ namespace SharedStates {
     public:
         int preloadTime = 5;
         void enter(KPStateMachine & sm) override;
+        const char * condition;
     };
 
 

@@ -306,6 +306,7 @@ public:
     void logInterruptedSample() {
         SD.begin(HardwarePins::SD_CARD);
         File log    = SD.open(config.logFile, FILE_WRITE);
+        Task & task = tm.tasks.at(currentTaskId);
 
         char formattedTime[64];
         auto utc = now();
@@ -318,23 +319,23 @@ public:
             ",",
             formattedTime,
             ",",
-            "SAMPLE INTERRUPTED",
+            task.name,
             ",",
-            "Temperature < 0C",
+            status.currentValve,
             ",",
-            "NULL",
+            status.currentStateName,
             ",",
-            "0",
+            "INTERRUPTED",
             ",",
-            "0",
+            "INTERRUPTED",
             ",",
-            "0",
+            "INTERRUPTED",
             ",",
             status.temperature,
             ",",
-            "0",
+            status.maxPressure,
             ",",
-            "0"};
+            "NULL"};
         log.println(data);
         log.flush();
         log.close();
@@ -402,7 +403,7 @@ public:
             }
 
             if (time_now >= task.schedule - 10) {
-                if(sensors.baro1.temperature < 0){
+                if(sensors.baro1.temperature < 1){
                     println(RED("Too cold"));
                     invalidateTaskAndFreeUpValves(task);
                     logInterruptedSample();

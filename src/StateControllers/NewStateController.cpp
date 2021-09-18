@@ -11,9 +11,26 @@ void NewStateController::setup() {
     // });
     // ..or alternatively if state only has one input and one output
 
-    registerState(SharedStates::Flush(), FLUSH_1, OFFSHOOT_CLEAN_1);
-    registerState(SharedStates::OffshootClean(5), OFFSHOOT_CLEAN_1, FLUSH_2);
-    registerState(SharedStates::Flush(), FLUSH_2, SAMPLE);
+    registerState(SharedStates::ArgonFlush(), ARGON_FLUSH, [this](int code) {
+        auto & app = *static_cast<App *>(controller);
+        switch (code) {
+        case 1:
+            app.logInterruptedSample();
+            return transitionTo(STOP);
+        default:
+            return transitionTo(FLUSH);
+        }
+    });
+    registerState(SharedStates::Flush(), FLUSH, [this](int code) {
+        auto & app = *static_cast<App *>(controller);
+        switch (code) {
+        case 1:
+            app.logInterruptedSample();
+            return transitionTo(STOP);
+        default:
+            return transitionTo(SAMPLE);
+        }
+    });
     registerState(SharedStates::Sample(), SAMPLE, [this](int code) {
         auto & app = *static_cast<App *>(controller);
         app.sensors.flow.stopMeasurement();
@@ -21,13 +38,22 @@ void NewStateController::setup() {
 
         switch (code) {
         case 0:
-            return transitionTo(OFFSHOOT_CLEAN_2);
+            return transitionTo(AIR_FLUSH);
         default:
             halt(TRACE, "Unhandled state transition: ", code);
         }
     });
-    registerState(SharedStates::OffshootClean(10), OFFSHOOT_CLEAN_2, AIR_FLUSH);
-    registerState(SharedStates::AirFlush(), AIR_FLUSH, STOP);
+    registerState(SharedStates::AirFlush(), AIR_FLUSH, [this](int code) {
+        auto & app = *static_cast<App *>(controller);
+        switch (code) {
+        case 1:
+            //May not make sense to have since sampling already occured.
+            //app.logInterruptedSample();
+            return transitionTo(STOP);
+        default:
+            return transitionTo(STOP);
+        }  
+    });
 
     // Reusing STOP and IDLE states from MainStateController
     registerState(Main::Stop(), STOP, IDLE);

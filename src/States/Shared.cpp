@@ -19,9 +19,24 @@ namespace SharedStates {
         app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);
         app.shift.write();
         app.pump.on();
+                this->condition        = nullptr;
 
-        // To next state after 10 secs
-        setTimeCondition(time, [&]() { sm.next(); });
+        // This condition will be evaluated repeatedly until true then the callback will be executed
+        // once
+        auto const condition = [&]() {
+            if (app.status.pressure >= 20) {
+                this->condition = "pressure";
+            }
+
+            if (app.status.temperature < 1 && app.sensors.pressure.enabled) {
+                this->condition = "temperature";
+            }
+
+            return this->condition != nullptr;
+        };
+
+        setTimeCondition(secsToMillis(time), [&]() { sm.next(); });
+        setCondition(condition, [&]() { sm.next(1); });
     }
 
     void FlushVolume::enter(KPStateMachine & sm) {
@@ -32,9 +47,30 @@ namespace SharedStates {
         app.shift.write();
         app.pump.on();
 
-        auto condition = [&]() { return app.status.waterVolume >= 500; };
-        setCondition(condition, [&]() { sm.next(1); });
-        setTimeCondition(time, [&]() { sm.next(); });
+        this->condition        = nullptr;
+
+        // This condition will be evaluated repeatedly until true then the callback will be executed
+        // once
+        auto const condition = [&]() {
+            if (app.status.pressure >= 20) {
+                this->condition = "pressure";
+            }
+
+            if (app.status.temperature < 1 && app.sensors.pressure.enabled) {
+                this->condition = "temperature";
+            }
+
+            if (timeSinceLastTransition() >= secsToMillis(time)) {
+                this->condition = "time";
+            }
+
+            return this->condition != nullptr;
+        };
+
+        setCondition(condition, [&]() { sm.next(); });
+
+        auto waterVolumeCondition = [&]() { return app.status.waterVolume >= 500; };
+        setCondition(waterVolumeCondition, [&]() { sm.next(1); });
     }
 
     void AirFlush::enter(KPStateMachine & sm) {
@@ -45,7 +81,50 @@ namespace SharedStates {
         app.shift.write();
         app.pump.on();
 
-        setTimeCondition(time, [&]() { sm.next(); });
+                this->condition        = nullptr;
+
+        // This condition will be evaluated repeatedly until true then the callback will be executed
+        // once
+        auto const condition = [&]() {
+            if (app.status.pressure >= 20) {
+                this->condition = "pressure";
+            }
+
+            if (app.status.temperature < 1 && app.sensors.pressure.enabled) {
+                this->condition = "temperature";
+            }
+
+            return this->condition != nullptr;
+        };
+
+        setTimeCondition(secsToMillis(time), [&]() { sm.next(); });
+        setCondition(condition, [&]() { sm.next(1); });
+    }
+
+    void ArgonFlush::enter(KPStateMachine & sm) {
+        auto & app = *static_cast<App *>(sm.controller);
+        app.shift.writeAllRegistersLow();
+        app.shift.setPin(app.currentValveIdToPin(), HIGH);
+        app.shift.write();
+        app.pump.on(Direction::reverse);
+        this->condition        = nullptr;
+
+        // This condition will be evaluated repeatedly until true then the callback will be executed
+        // once
+        auto const condition = [&]() {
+            if (app.status.pressure >= 20) {
+                this->condition = "pressure";
+            }
+
+            if (app.status.temperature < 1 && app.sensors.pressure.enabled) {
+                this->condition = "temperature";
+            }
+
+            return this->condition != nullptr;
+        };
+
+        setTimeCondition(secsToMillis(time), [&]() { sm.next(); });
+        setCondition(condition, [&]() { sm.next(1); });
     }
 
     void Sample::enter(KPStateMachine & sm) {
@@ -93,8 +172,25 @@ namespace SharedStates {
         app.shift.setPin(TPICDevices::FLUSH_VALVE, HIGH);
         app.shift.write();
         app.pump.on(Direction::reverse);
+        this->condition        = nullptr;
 
-        setTimeCondition(time, [&]() { sm.next(); });
+        // This condition will be evaluated repeatedly until true then the callback will be executed
+        // once
+        auto const condition = [&]() {
+            if (app.status.pressure >= 20) {
+                this->condition = "pressure";
+            }
+
+            if (app.status.temperature < 1 && app.sensors.pressure.enabled) {
+                this->condition = "temperature";
+            }
+
+            return this->condition != nullptr;
+        };
+
+        setTimeCondition(secsToMillis(time), [&]() { sm.next(); });
+
+        setCondition(condition, [&]() { sm.next(1); });
     };
 
     void OffshootPreload::enter(KPStateMachine & sm) {
