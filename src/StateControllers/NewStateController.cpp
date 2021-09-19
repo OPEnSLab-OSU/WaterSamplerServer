@@ -13,6 +13,7 @@ void NewStateController::setup() {
 
     registerState(SharedStates::ArgonFlush(), ARGON_FLUSH, [this](int code) {
         auto & app = *static_cast<App *>(controller);
+        app.pump.off();
         switch (code) {
         case 1:
             app.logInterruptedSample();
@@ -23,6 +24,7 @@ void NewStateController::setup() {
     });
     registerState(SharedStates::Flush(), FLUSH, [this](int code) {
         auto & app = *static_cast<App *>(controller);
+        app.pump.off();
         switch (code) {
         case 1:
             app.logInterruptedSample();
@@ -33,6 +35,7 @@ void NewStateController::setup() {
     });
     registerState(SharedStates::Sample(), SAMPLE, [this](int code) {
         auto & app = *static_cast<App *>(controller);
+        app.pump.off();
         app.sensors.flow.stopMeasurement();
         app.logAfterSample();
 
@@ -44,7 +47,6 @@ void NewStateController::setup() {
         }
     });
     registerState(SharedStates::AirFlush(), AIR_FLUSH, [this](int code) {
-        auto & app = *static_cast<App *>(controller);
         switch (code) {
         case 1:
             //May not make sense to have since sampling already occured.
